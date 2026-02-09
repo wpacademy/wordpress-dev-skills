@@ -1,16 +1,26 @@
-# WordPress Claude Skills
+# WordPress AI Agent Skills
 
-A collection of [Claude AI skills](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-ai-skills) for professional WordPress development. These skills ensure Claude follows official WordPress coding standards, security best practices, accessibility requirements (WCAG 2.1 AA), and WordPress.org directory guidelines when building plugins and themes.
+A collection of AI agent skills (custom rules/instructions) for professional WordPress development. These skills ensure your AI coding agent — whether it's Claude, Cursor, Windsurf, Antigravity, GitHub Copilot, or any other — follows official WordPress coding standards, security best practices, accessibility requirements (WCAG 2.1 AA), and WordPress.org directory guidelines when building plugins and themes.
 
-## 🎯 What Are Claude Skills?
+## 🎯 What Are AI Agent Skills?
 
-Claude Skills are reusable instruction sets that guide Claude's behavior for specific tasks. When you add these skills to your project, Claude automatically follows WordPress best practices — producing code that's secure, accessible, modular, and ready for WordPress.org submission.
+AI Agent Skills are reusable instruction sets (written in plain Markdown) that guide AI coding assistants to follow specific standards and patterns. When you add these skills to your project, your AI agent automatically follows WordPress best practices — producing code that's secure, accessible, modular, and ready for WordPress.org submission.
+
+They work across all major AI coding tools:
+
+| Tool | Config Location |
+|---|---|
+| **Claude Code** | `.claude/skills/` |
+| **Cursor** | `.cursor/rules/` |
+| **Windsurf** | `.windsurf/rules/` |
+| **Antigravity** | `.antigravity/rules/` |
+| **GitHub Copilot** | `.github/copilot-instructions.md` |
 
 ## 📦 Included Skills
 
 ### 1. `wp-plugin-dev` — WordPress Plugin Development
 
-Guides Claude to build production-ready WordPress plugins with proper architecture and security.
+Guides your AI agent to build production-ready WordPress plugins with proper architecture and security.
 
 **Triggers when you say things like:**
 - "Build me a plugin for X"
@@ -55,7 +65,7 @@ wp-plugin-dev/
 
 ### 2. `wp-theme-dev` — WordPress Theme Development
 
-Guides Claude to build accessible, standards-compliant WordPress themes.
+Guides your AI agent to build accessible, standards-compliant WordPress themes.
 
 **Triggers when you say things like:**
 - "Build me a theme for X"
@@ -101,11 +111,11 @@ wp-theme-dev/
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/wordpress-claude-skills.git
+git clone https://github.com/YOUR_USERNAME/wordpress-ai-agent-skills.git
 
 # Copy skills to your project
-cp -r wordpress-claude-skills/wp-plugin-dev your-project/.claude/skills/
-cp -r wordpress-claude-skills/wp-theme-dev your-project/.claude/skills/
+cp -r wordpress-ai-agent-skills/wp-plugin-dev your-project/.claude/skills/
+cp -r wordpress-ai-agent-skills/wp-theme-dev your-project/.claude/skills/
 ```
 
 Your project structure should look like:
@@ -134,6 +144,93 @@ your-project/
 1. Download the skill folder(s) from this repo
 2. Upload to Claude.ai via **Settings → Skills** (when available) or reference them in your project
 
+---
+
+## 🔄 Setup by Platform
+
+These skills are **plain Markdown files** that work with any AI coding tool supporting custom rules or instructions. Choose your platform below:
+
+### Cursor IDE
+
+Cursor uses `.cursor/rules/` for project-specific rules. You can convert these skills into Cursor rules:
+
+```bash
+# Option 1: Single rule file (combine SKILL.md + references)
+mkdir -p your-project/.cursor/rules
+
+# For plugin development
+cat wp-plugin-dev/SKILL.md wp-plugin-dev/references/*.md > your-project/.cursor/rules/wp-plugin-dev.mdc
+
+# For theme development
+cat wp-theme-dev/SKILL.md wp-theme-dev/references/*.md > your-project/.cursor/rules/wp-theme-dev.mdc
+```
+
+Add a frontmatter header to the `.mdc` file for auto-activation:
+
+```yaml
+---
+description: WordPress plugin development standards and best practices
+globs: "**/*.php"
+alwaysApply: false
+---
+```
+
+> **Note:** Cursor has a 6,000 character limit per rule file. You may need to split into multiple rule files (e.g., `wp-plugin-security.mdc`, `wp-plugin-architecture.mdc`) or paste the SKILL.md as the rule and keep references as separate files to `@reference` in prompts.
+
+### Windsurf (Cascade)
+
+Windsurf uses `.windsurf/rules/` for workspace rules:
+
+```bash
+mkdir -p your-project/.windsurf/rules
+
+# Combine into a single rule file
+cat wp-plugin-dev/SKILL.md wp-plugin-dev/references/*.md > your-project/.windsurf/rules/wp-plugin-dev.md
+cat wp-theme-dev/SKILL.md wp-theme-dev/references/*.md > your-project/.windsurf/rules/wp-theme-dev.md
+```
+
+Or paste the contents via **Windsurf Settings → Set Workspace AI Rules → Edit Rules**.
+
+> **Note:** Windsurf has a 12,000 combined character limit for all rules. You may need to use a condensed version of the SKILL.md only.
+
+### Google Antigravity
+
+Antigravity supports custom rules similar to Cursor/Windsurf. Place rule files in your project root or configure via the Agent Manager settings:
+
+```bash
+# Copy the combined rules
+cat wp-plugin-dev/SKILL.md wp-plugin-dev/references/*.md > your-project/.antigravity/rules/wp-plugin-dev.md
+```
+
+### GitHub Copilot
+
+GitHub Copilot supports custom instructions via `.github/copilot-instructions.md`:
+
+```bash
+# Combine into a single instructions file
+cat wp-plugin-dev/SKILL.md wp-plugin-dev/references/*.md > your-project/.github/copilot-instructions.md
+```
+
+### Any Other AI Tool
+
+The skills are just Markdown files. For any AI coding assistant that accepts custom instructions or system prompts:
+
+1. **Paste the SKILL.md content** as the primary instruction/system prompt
+2. **Attach reference files** as additional context when working on specific tasks
+3. Or **combine everything** into a single document and paste into your tool's rules/settings
+
+### Platform Comparison
+
+| Feature | Claude | Cursor | Windsurf | Antigravity | Copilot |
+|---|---|---|---|---|---|
+| Config location | `.claude/skills/` | `.cursor/rules/` | `.windsurf/rules/` | `.antigravity/rules/` | `.github/copilot-instructions.md` |
+| File format | Markdown (YAML frontmatter) | `.mdc` (Markdown) | Markdown | Markdown | Markdown |
+| Multi-file support | ✅ (skill + references) | ✅ (multiple rule files) | ✅ (multiple rule files) | ✅ | ❌ (single file) |
+| Auto-trigger by context | ✅ (description field) | ✅ (globs + description) | ✅ (activation modes) | ✅ | ❌ (always active) |
+| Character limit | ~Generous | 6,000/rule | 12,000 total | Varies | No hard limit |
+
+> **💡 Tip:** The modular structure (SKILL.md + separate reference files) is designed so you can load only what you need. For tools with tight character limits, use just the SKILL.md and reference specific files when needed.
+
 ## 💡 Usage Examples
 
 ### Plugin Development
@@ -151,6 +248,8 @@ Claude will automatically:
 - Sanitize all input, escape all output, use `$wpdb->prepare()`
 - Generate `readme.txt` and `uninstall.php`
 
+> Other AI agents (Cursor, Windsurf, etc.) will follow the same patterns when these rules are loaded.
+
 ### Theme Development
 
 ```
@@ -158,7 +257,7 @@ Create a block theme called "Starter Blue" with a hero section,
 blog archive, and dark mode style variation. Make it accessibility-ready.
 ```
 
-Claude will automatically:
+Your AI agent will automatically:
 - Generate `theme.json` with accessible color palette (4.5:1+ contrast)
 - Create HTML templates with proper semantic structure
 - Add skip links, ARIA landmarks, underlined content links
@@ -185,7 +284,7 @@ Contributions are welcome! If you'd like to improve these skills:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b improve-security-reference`)
 3. Make your changes
-4. Test with Claude to verify the skill produces correct output
+4. Test with your preferred AI agent to verify the skill produces correct output
 5. Submit a pull request
 
 **Areas that could use contributions:**
