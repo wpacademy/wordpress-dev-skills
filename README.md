@@ -116,8 +116,8 @@ wp-theme-dev/
 git clone https://github.com/wpacademy/wordpress-dev-skills
 
 # Copy skills to your project
-cp -r wordpress-ai-agent-skills/wp-plugin-dev your-project/.claude/skills/
-cp -r wordpress-ai-agent-skills/wp-theme-dev your-project/.claude/skills/
+cp -r wordpress-dev-skills/wp-plugin-dev your-project/.claude/skills/
+cp -r wordpress-dev-skills/wp-theme-dev your-project/.claude/skills/
 ```
 
 Your project structure should look like:
